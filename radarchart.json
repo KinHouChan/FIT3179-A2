@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega/v5.json",
-    "description": "A radar chart of death rates in 2022, filtered by state.",
+    "description": "A radar chart of death rates in 2021 filtered by state.",
     "width": 575,
     "height": 510,
     "padding": 50,
