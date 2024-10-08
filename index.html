@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+    <script src="vega_lite_vis.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css" />
+    <link rel="stylesheet" href="style.css">
+    <title>Death Rate and Leading Cause of Death in Malaysia</title>
+    <style>
+        .custom-container {
+            margin: 10px;
+            margin-bottom: 0px;
+        }
+        .map-container {
+            height: 400px;
+        }
+        .full-height-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .half-height-container {
+            flex: 1;
+            margin-bottom: 0px;
+        }
+        /* Custom styles for visual hierarchy */
+        .highlight {
+            color: black;
+            font-weight: bold;
+            font-size: 1.5em; /* Increase font size */
+        }
+        .highlightMsia {
+            font-family: 'Arial Black', sans-serif;
+            font-weight: bold;
+            font-size: 1.5em;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+            background-image: url('Flag_of_Malaysia.svg.webp'); /* Path to your image */
+            background-size: cover;
+            -webkit-background-clip: text;
+            
+            background-clip: text;
+            color: transparent; /* Hide text, show background */
+            position:  relative;
+        }
+        .highlightSg {
+            font-family: 'Arial Black', sans-serif;
+            font-weight: bold;
+            font-size: 1.5em;
+            text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.15);
+            background-image: url('Flag_of_Singapore.svg.webp'); /* Path to your image */
+            background-size: cover;
+            -webkit-background-clip: text;
+            color: transparent; /* Hide text, show background */
+            position:  relative;
+        }
+        .highlightBrunei {
+            font-family: 'Arial Black', sans-serif;
+            font-weight: bold;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+            background-image: url('Flag_of_Brunei.svg.png'); /* Path to your image */
+            background-size: cover;
+            -webkit-background-clip: text;
+            color: transparent; /* Hide text, show background */
+            position:  relative;
+        }
+        .text-frame {
+        border: 2px solid black; /* Green border */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px; /* Padding around the text */
+        background-color: #f9f9f9; /* Light gray background */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        max-width: 700px; /* Maximum width for the frame */
+        margin: 20px auto; /* Center the frame on the page */
+        text-align: center; /* Center the text */
+}
+
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="custom-container">
+            <h1 class="serif" style="text-align: center;"><span class="highlight" style="font-size: 2.5em;">Death</span> <span class="highlight-light" style="font-size: 1.8em;"> and its Leading Causes in</span> <span class="highlightMsia" style="font-size: 1.8em;">MALAYSIA</span> </h1>
+            <!-- <div class="pure-g" style="text-align: center;">
+                <p>
+                    Malaysia's health landscape is marked by significant challenges and progress, <br>
+                    reflecting the intricate interplay between socioeconomic factors, healthcare access, and lifestyle choices. <br>
+                    As the nation strives to improve public health outcomes, understanding the dynamics of mortality rates,<br>
+                    leading causes of death, and healthcare expenditure becomes increasingly crucial. <br>
+                    These maps provide a visual representation of the current <br>
+                    state of health in Malaysia, revealing not only where we <br>
+                    stand but also the opportunities for improvement in our <br>
+                    pursuit of a healthier society. -->
+                <!-- </p> -->
+            <!-- </div> --> 
+            <div class="pure-g" style="text-align: center;">
+                <!-- <img src="./pngwing.com.png" alt="Malaysia Flag" style="width: 150px; height: 150px;"> -->
+                <img src="./skull-icon.png" alt="Malaysia Flag" style="width: 130px; height: 130px; margin-top: 20px;">
+                <div class="text-frame">
+                    <p style="max-width: 60ch; margin: auto;">
+                        <span class="highlightMsia", style="font-size: 1.1em;">Malaysia</span>'s health landscape presents both challenges and opportunities. The complex interplay of socioeconomic factors, healthcare access, and lifestyle choices shapes our mortality rates and health expenditures. Let’s delve into the maps below to uncover correlations and insights that could guide us toward a healthier future.
+                    </p>
+                </div>
+                <!-- <img src="./pngwing.com.png" alt="Malaysia Flag" style="width: 150px; height: 150px;"> -->
+                <img src="./skull-icon.png" alt="Malaysia Flag" style="width: 130px; height: 130px; margin-top: 20px;">
+            </div>
+            
+            <div class="pure-g">
+                <div class="pure-u-1-1">
+                    <div id="map_death"></div>
+                </div>
+
+                <!-- <div class="pure-g" id="combinemap"></div> -->
+                <!-- First row: Map and side charts -->
+                <!-- <div class="pure-u-2-3">
+                    <div id="map_death"></div>
+                </div>
+                <div class="pure-u-1-3 full-height-container">
+                    <div id="death_cause" class="half-height-container"></div>
+                    <div id="health_exp" class="half-height-container"></div>
+                </div> -->
+            </div>
+            <div class="pure-g" style="margin-bottom: 0px;">
+                <div class="pure-u-1-2">
+                    <div id="death_cause"></div>
+                </div>
+                <div class="pure-u-1-2" style="margin-bottom: 0px;">
+                    <div id="health_exp"></div>
+            </div>
+
+            <!-- <div class="pure-g">
+                <div class="pure-u-1-2">
+                    <div class="description description-left">
+                        <h2 class="serif">Across Different Life Stages: How Do <span class="highlight-light">Death</span> Rates Differ?</h2>
+                        <p>Across <span class="highlightMsia", style="font-size: 1.1em;">Malaysia</span>, <span class="highlight-light">death</span> rates paint a concerning picture, with the Maternal and Perinatal stages consistently recording the highest numbers. Limited access to quality prenatal care, childbirth complications, and delayed medical interventions for newborns are significant contributors. In states like Labuan and Putrajaya, these issues are more pronounced, reflecting disparities in healthcare infrastructure. </p>
+                        <p>Improving access to early intervention and maternal care could lead to significant reductions in mortality rates, especially in these critical life stages, where timely healthcare can make a life-saving difference.</p>
+                    </div>
+                </div>
+                <div class="pure-u-1-2">
+                    <div class="description description-right">
+                        <h2 class="serif">Top 10 <span class="highlight-light">Death</span> Causes by Gender: A Comparison Across Two Years</h2>
+                        <p>Between 2019 and 2021, stark contrasts in <span class="highlight-light">death</span> rates emerged between genders, with <span style="color: #1f4e79;">ischaemic heart disease</span> and <span style="color: #c0392b;">COVID-19</span> hitting man hardest. The surge in <span style="color: #c0392b;">COVID-19</span> fatalities further highlights these vulnerabilities. <span style="color: #ff7f0e;">Cerebrovascular</span> and hypertensive diseases reflect aging and lifestyle risks that both men and women face. Breast cancer remains a concern for women, emphasizing the need for targeted healthcare. </p>                       
+                        <p>Higher male mortality from <span style="color: #00acc1;">transport accidents </span>also strongly points to riskier behaviors, underscoring the urgent need for more tailored public health measures and interventions.</p>
+                    </div>
+                </div> -->
+                <!-- <div class="pure-u-1-2">
+                    <div id="radarchart"></div>
+                </div> -->
+                <!-- <div class="pure-u-1-3"> -->
+                    <!-- <div id="donut"></div>
+                </div> -->
+                <!-- <div class="pure-u-1-2">
+                    <div class="description description-right">
+                        <h2 class="serif">Across Life Stages: How Do <span class="highlight-light">Death</span> Rates Differ?</h2>
+                        <p>Across Malaysia, <span class="highlight-light">death</span> rates tell a clear story: the Maternal and Perinatal stages consistently show the highest numbers. This may stem from factors like limited access to prenatal care, childbirth complications, or delayed interventions for newborns. In some states like Labuan and Putrajaya, these challenges are even more pronounced, highlighting disparities in healthcare infrastructure. </p>
+                        <p>Addressing these issues in critical life stages could lead to significant improvements in survival rates.</p>
+                    </div>
+                </div> -->
+            <!-- </div> -->
+            <div class="pure-g">
+                <div class="pure-u-1-2">
+                    <h2>
+                        <div class="description description-left" style="font-family: serif;">
+                            Across Different Life Stages: How Do <span class="highlight-light">Death</span> Rates Differ?
+                        </div>
+                    </h2>
+                    <div id="radarchart"></div>
+                </div>
+                <div class="pure-u-1-2">
+                    <h2>
+                        <div class="description description-right" style="font-family: serif;">
+                            Top 10 <span class="highlight-light">Death</span> Causes by Gender: A Comparison Across Two Years
+                        </div>
+                    </h2>
+                    <div id="comet" style="padding-left: 16px;"></div>
+                </div>
+            </div>
+            <div class="pure-g">
+                <div class="pure-u-1-2">
+                    <div class="description description-left">
+                        <!-- <h2 class="serif">Across Different Life Stages: How Do <span class="highlight-light">Death</span> Rates Differ?</h2> -->
+                        <p>Across <span class="highlightMsia", style="font-size: 1.1em;">Malaysia</span>, <span class="highlight-light">death</span> rates paint a concerning picture, with the Maternal and Perinatal stages consistently recording the highest numbers. Limited access to quality prenatal care, childbirth complications, and delayed medical interventions for newborns are significant contributors. In states like <strong>Labuan</strong> and <strong>Putrajaya</strong>, these issues are more pronounced, reflecting disparities in healthcare infrastructure. </p>
+                        <p>Improving access to early intervention and maternal care could lead to significant reductions in mortality rates, especially in these critical life stages, where timely healthcare can make a life-saving difference.</p>
+                    </div>
+                </div>
+                <div class="pure-u-1-2">
+                    <div class="description description-right">
+                        <!-- <h2 class="serif">Top 10 <span class="highlight-light">Death</span> Causes by Gender: A Comparison Across Two Years</h2> -->
+                        <p>Between 2019 and 2021, stark contrasts in <span class="highlight-light">death</span> rates emerged between genders, with <span style="color: #1f4e79;">ischaemic heart disease</span> and <span style="color: #c0392b;">COVID-19</span> hitting man hardest. The surge in <span style="color: #c0392b;">COVID-19</span> fatalities further highlights these vulnerabilities. <span style="color: #ff7f0e;">Cerebrovascular</span> and hypertensive diseases reflect aging and lifestyle risks that both men and women face. Breast cancer remains a concern for women, emphasizing the need for targeted healthcare. </p>                       
+                        <p>Higher male mortality from <span style="color: #00acc1;">transport accidents </span>also strongly points to riskier behaviors, underscoring the urgent need for more tailored public health measures and interventions.</p>
+                    </div>
+                </div>
+            <!-- <div class="pure-g">
+                <div class="pure-u-2-3">
+                    <div id="comet" class="map-container"></div>
+                </div>
+                <div class="pure-u-1-3">
+                    <div class="description description-left">
+                        <h2 class="serif">Top 10 <span class="highlight-light">Death</span> Causes by Gender: A Comparison Across Two Years</h2>
+                        <p>Between 2019 and 2021, stark contrasts in <span class="highlight-light">death</span> rates emerged between genders, with ischaemic heart disease and COVID-19 disproportionately affecting men. This can be attributed to higher smoking rates, stress, and barriers to healthcare access. The surge in COVID-19 fatalities underscores these vulnerabilities.</p> <p>Meanwhile, the impact of cerebrovascular and hypertensive diseases highlights common aging and lifestyle risks for both genders. Breast cancer remains a critical concern for women, emphasizing the need for targeted healthcare strategies.</p> <p>Additionally, higher male mortality from transport accidents suggests riskier behaviors, indicating that tailored public health interventions are essential to address these disparities.</p>
+                    </div>
+                </div>
+            </div> -->
+            <!-- <div class="pure-g">
+                <div class="pure-u-1-3">
+                    <div class="description description-left">
+                        <h2 class="serif">Top 10 <span class="highlight-light">Death</span> Causes by Gender: A Comparison Across Two Years</h2>
+                        <p>Between 2019 and 2021, stark contrasts in <span class="highlight-light">death</span> rates emerged between genders, with ischaemic heart disease and COVID-19 disproportionately affecting men. This can be attributed to higher smoking rates, stress, and barriers to healthcare access. The surge in COVID-19 fatalities underscores these vulnerabilities.</p> <p>Meanwhile, the impact of cerebrovascular and hypertensive diseases highlights common aging and lifestyle risks for both genders. Breast cancer remains a critical concern for women, emphasizing the need for targeted healthcare strategies.</p> <p>Additionally, higher male mortality from transport accidents suggests riskier behaviors, indicating that tailored public health interventions are essential to address these disparities.</p>
+                    </div>
+                </div>
+                <div class="pure-u-2-3">
+                    <div id="comet" class="map-container"></div>
+                </div>
+            </div> -->
+
+
+                <!-- <div class="pure-g">
+                    <div id="donut-ethnic"></div>
+                </div>
+                <div class="pure-g">
+                    <p>Lung and airway cancer is a dominant cause of death in all three ethnic groups, with lifestyle factors like higher smoking rates among Malaysian men contributing significantly. 
+                        The Chinese community, with 36,324 deaths, faces a higher prevalence of this cancer, likely tied to urbanization and pollution in densely populated areas. 
+                        Ischaemic heart disease hits the Indian population hard, contributing to 14,856 deaths, a trend linked to higher rates of diabetes and hypertension among this ethnic group. 
+                        Meanwhile, the Malay community, with 84,256 total deaths, also shows high mortality from both cancer and heart disease. 
+                        Interestingly, transport accidents are a major concern for Indians, reflecting higher rates of motorbike use in certain regions, 
+                        indicating a pressing need for improved road safety interventions.
+                    </p>  
+                </div>   -->
+                <div class="pure-g" style="margin: auto;">
+                    <h2 class="serif" style="text-align: center;">
+                        How Do Top 6 Leading Causes of <span class="highlight-light">Death</span> Vary Across Ethnic Communities?
+                    </h2> 
+                </div>
+                <div class="pure-g">
+                    <div id="donut-ethnic"></div>
+                </div>
+                
+                <div class="pure-g">
+                    <div class="pure-u-1-3">
+                        <!-- <div class="description description-left"> -->
+                            <p><strong>Chinese:</strong> The Chinese community, with <strong>36,324</strong> <span class="highlight-light">death</span>s, faces a higher prevalence of <span style="color: darkgray;">lung and airway cancer</span>, likely tied to urbanization and pollution in densely populated areas.</p>
+                        <!-- </div> -->
+                    </div>
+                    <div class="pure-u-1-3">
+                        <p><strong>Indian:</strong> <span style="color: #1f4e79;">Ischaemic heart disease</span> caused <strong>17.40%</strong> Indian <span class="highlight-light">death</span>s, linked to higher <span style="color: #5c4d9e;">diabetes</span> and hypertension rates. <span style="color: #00acc1;">Transport accidents</span> are significant due to increased motorbike use.</p>
+                    </div>
+                    <div class="pure-u-1-3">
+                        <!-- <div class="description description-right"> -->
+                            <p><strong>Malay:</strong> The Malay community, with <strong>84,256</strong> total <span class="highlight-light">death</span>s, shows high mortality from both <span style="color: darkgrey;">lung and airway cancer</span> and <span style="color: #1f4e79;">heart disease</span>, likely linked to smoking and other lifestyle factors.</p>
+
+                        <!-- </div> -->
+                    </div>
+                </div>
+                
+                
+                <div class="pure-g">
+                    <div class="pure-u-1-2">
+                        <div class="description description-left">
+                            <div id="bumpchart"></div>
+                        </div>
+                    </div>
+                    <div class="pure-u-1-2">
+                        <div class="description description-right">
+                            <h2 class="serif"><span class="highlightMsia" style="font-size: 1.2em;">Malaysia</span>’s Journey Through Mortality: Where Do We Stand in Southeast Asia?</h2>
+                            <p>Amid the diverse landscape of Southeast Asia, <span class="highlightMsia" style="font-size: 1.1em;">Malaysia</span> ranks <strong>6</strong>th out of <strong>8</strong> countries when it comes to <span class="highlight-light">death</span> rates. While some might consider this a middle-of-the-pack position, it presents a crucial opportunity for reflection. </p>
+                            <p>Countries like <span class="highlightSg" style="font-size: 1.1em;">Singapore</span> and <span class="highlightBrunei" style="font-size: 1.1em;">Brunei Darussalam</span> have surged ahead, boasting more robust healthcare systems, better access to preventive care, and stronger public health initiatives. On the other hand, countries ranked below <span class="highlightMsia" style="font-size: 1.2em;">Malaysia</span> continue to grapple with higher mortality rates due to systemic challenges.</p>
+                            <p><span class="highlightMsia" style="font-size: 1.1em;">Malaysia</span>’s rank, however, is a call to action. As chronic diseases like <span style="color: #1f4e79;">heart disease</span> and <span style="color: #5c4d9e;">diabetes</span> rise, and new threats like the <span style="color: #c0392b;">COVID-19</span> pandemic emerge, it’s a reminder that public health strategies must evolve to address these challenges head-on. Tackling lifestyle-related risk factors, improving healthcare accessibility in rural areas, and enhancing disease prevention programs are all steps that could boost the nation's ranking in the years to come. </p>
+                            <p>The journey isn’t over—there's still time to bridge the healthcare gaps that impact the nation's survival rates.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- <div class="pure-u-md-1-3">
+                    <div class="centre-container">
+                        <img src="https://www.pngkey.com/png/detail/413-4139801_data-ranking-comments-ranking-icon-white-png.png" alt="Data Ranking Comments - Ranking Icon White Png@pngkey.com" height="200" width="200">
+                    </div>
+                </div> -->
+
+<div style="  margin: auto;">
+
+
+        <div style="text-align: center; font-size:x-small">
+ 
+            <p>
+                © 2024 Visualization by Chan Kin Hou<br>
+                Data collected from the:<br>
+                <a href="https://www.moh.gov.my/moh/resources/Penerbitan/Penerbitan%20Utama/HEALTH%20FACTS/Health_Facts_2022-updated.pdf" target="_blank">Ministry of Health Malaysia (2021)</a><br>
+                <a href="https://data.worldbank.org/indicator/SP.DYN.CDRT.IN?end=2021&locations=MY-TH-SG-BN-ID-PH-LA-KH&start=1960" target="_blank">World Bank Statistics (2021)</a><br>
+                <a href="https://newss.statistics.gov.my/newss-portalx/ep/epFreeDownloadContentSearch.seam?cid=631294" target="_blank">Department of Statistics Malaysia (2021)</a>
+            </p>
+        </div>
+
+</div>
+
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+<script>
+
+    // Function to embed a vega visualization
+    function embedVega(selector, spec) {
+        return vegaEmbed(selector, spec,{"actions":false})
+            .then(function(result) {
+                // Access the Vega view instance
+                const view = result.view;
+                // Additional logic can be added here
+            })
+            .catch(console.error);
+    }
+
+    // Load all visualizations
+        // Load all visualizations directly
+        Promise.all([
+            embedVega("#map_death", "map_dv1.json"),
+            embedVega("#death_cause", "death-cause-by-state.json"),
+            embedVega("#health_exp", "health-exp.json"),
+            embedVega("#comet", "comet.json"),
+            embedVega("#bumpchart", "bumpchart.json"),
+            embedVega("#radarchart", "radarchart.json"),
+            embedVega("#donut-ethnic", "donut-ethnic.json"),
+        ]);
+</script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+    <script src="vega_lite_vis.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css" />
+    <link rel="stylesheet" href="style.css">
+    <title>Death Rate and Leading Cause of Death in Malaysia </title>
+</head>
+<body>
+    <div>
+        <h1>Overall Death Rate by States</h1>
+    </div>
+    <script>
+        vega_lite_vis('map_death', 'map_dv1.json');
+        vega_lite_vis('death_cause','death-cause-by-state.json')
+        vega_lite_vis('health-exp','health-exp.json')
+        vega_lite_vis('comet','comet.json')
+        vega_lite_vis('bumpchart','bumpchart.json')
+    </script>
+</body>
+</html> -->

@@ -1,0 +1,147 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Top Causes of Death by State in Malaysia 2021",
+  "width": 530,
+  "height": 225,
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  },
+  "projection": {
+    "type": "mercator"
+  },
+  "params": [
+    {
+      "name": "selectedState",
+      "select": {
+        "type": "point",
+        "fields": ["properties.name"],
+        "on": "click"
+      },
+      "views": ["layer_0"]
+    },
+    {
+      "name": "selectedCause",
+      "select": {
+        "type": "point",
+        "fields": ["Top_Cause"],
+        "on":"click"
+      },
+      "bind": "legend",
+      "views": ["layer_1"]
+    }
+  ],
+  "layer": [
+    {
+      "name": "layer_0",
+      "data": {
+        "url": "./msia.json",
+        "format": { "type": "topojson", "feature": "my" }
+      },
+      "transform": [
+        {
+          "calculate": "'Data is not available in ' + datum.properties.name",
+          "as": "note"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "lightgray"
+      },
+      "encoding": {
+        "tooltip": { "field": "note" }
+      }
+    },
+    {
+      "name": "layer_1",
+      "data": {
+        "url": "./msia.json",
+        "format": { "type": "topojson", "feature": "my" }
+      },
+      "transform": [
+        {
+          "lookup": "properties.name",
+          "from": {
+            "data": {
+              "url": "./top_cause_by_state.csv"
+            },
+            "key": "State",
+            "fields": ["Top_Cause", "Percentage_of_death"]
+          }
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white",
+        "strokeWidth": 0.6
+      },
+      "encoding": {
+        "color": {
+          "field": "Top_Cause",
+          "type": "nominal",
+          "title": "Top Cause of Death",
+          "scale": {
+            "domain": [
+              "COVID-19 infection (due to)",
+              "Ischaemic heart diseases",
+              "Pneumonia"
+            ],
+            "range": [
+              "#99000d",  
+              "#1f4e79",  
+              "yellow"
+            ]
+          },
+          "legend": {
+            "title": "Top Cause of Death",
+            "orient": "none",
+            "legendX": 124,
+            "legendY": 20,
+            "titleFontSize": 8,
+            "labelFontSize": 8
+          }
+        },
+        "opacity": {
+          "condition": [
+            {
+              "param": "selectedState",
+              "value": 1
+            }
+          ],
+          "value": 0.0
+        },
+        
+        "tooltip": [
+          { "field": "properties.name", "type": "nominal", "title": "State" },
+          { "field": "Top_Cause", "type": "nominal", "title": "Top Cause of Death" },
+          { "field": "Percentage_of_death", "type": "quantitative", "title": "Percentage of Death (%)", "format": ".1f" }
+        ]
+      }
+    },
+    {"data": {"values": [{}]},
+    "mark": {
+      "type": "text",
+      "align": "center",
+      "baseline": "middle",
+      "text": "Selangor has the highest COVID-19 death rate",
+      "dx": -20,
+      "dy": -18,
+      "fontWeight": "bold",
+      "fontStyle": "italic"
+    }
+  },
+  {"data": {"values": [{}]},
+  "mark": {
+    "type": "text",
+    "align": "center",
+    "baseline": "middle",
+    "text": "due to its high incidence rate",
+    "dx": -20,
+    "dy": -8,
+    "fontWeight": "bold",
+    "fontStyle": "italic"
+  }
+}
+  ]
+}

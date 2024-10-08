@@ -1,0 +1,113 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Health Expenditure Per Capita in Malaysia 2021",
+  "width": 550,
+  "height": 225,
+  "config": {
+    "view": {
+      "stroke": null  
+    }
+  },
+  "projection": {
+    "type": "mercator"
+  },
+  "layer": [
+    {
+      "transform": [
+        {"calculate": "'Data is not available in ' + datum.properties.name", "as": "note"}
+      ],
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+      "encoding": {
+        "tooltip": {
+          "field": "note"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "./msia.json",
+        "format": { "type": "topojson", "feature": "my" }
+      },
+      "transform": [
+        {
+          "lookup": "properties.name",
+          "from": {
+            "data": {
+              "url": "./health_expenditure_per_capita.csv"
+            },
+            "key": "State",
+            "fields": ["Expenditure_Per_Capita"]
+          }
+        },
+        {
+          "calculate": "datum.Expenditure_Per_Capita", 
+          "as": "Expenditure_Per_Capita"
+        }
+      ],
+      "mark": { 
+      "type": "geoshape",        
+      "stroke": "white",
+      "strokeWidth": 0.6 },
+      "encoding": {
+        "color": {
+          "condition": {
+            "param": "selectedState",
+            "field": "Expenditure_Per_Capita",
+            "type": "quantitative",
+            "title": "Expenditure Per Capita (RM)",
+            "scale": {
+              "type": "threshold",
+              "domain": [1495, 1740, 1750, 1760, 1790, 1950, 2500, 2900],
+              "range": ["#fde725", "#b5de2b", "#6ece58", "#35b779", "#1f9e89", "#26828e",  "#3e4989", "#482777", "#440154"]
+            },
+            "legend":{
+              "orient": "none",
+              "direction": "horizontal",
+              "legendX": 145,
+              "legendY": 35,
+              "padding": -16,
+              "tickCount": 9,
+              "titleFontSize": 8,
+              "labelFontSize": 8
+            }
+          },
+          "value": "lightgray"  
+        },
+        "tooltip": [
+          { "field": "properties.name", "type": "nominal", "title": "State" },
+          { "field": "Expenditure_Per_Capita", "type": "quantitative", "title": "Health Expenditure Per Capita (RM)" }
+        ]
+      },
+      "params": [
+        {
+          "name": "selectedState",
+          "select": { "type": "point", "fields": ["properties.name"], "on": "click" }
+        }
+      ]
+    },
+    {"data": {"values": [{}]},
+    "mark": {
+      "type": "text",
+      "align": "center",
+      "baseline": "middle",
+      "text": "Sabah has the lowest health expenditure per capita,",
+      "dx": -20,
+      "dy": -18,
+      "fontWeight": "bold",
+      "fontStyle": "italic"
+    }
+  },
+  {"data": {"values": [{}]},
+  "mark": {
+    "type": "text",
+    "align": "center",
+    "baseline": "middle",
+    "text": "underscoring the need for more healthcare funding",
+    "dx": -20,
+    "dy": -8,
+    "fontWeight": "bold",
+    "fontStyle": "italic"
+  }
+}
+  ]
+}
