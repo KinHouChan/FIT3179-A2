@@ -30,7 +30,7 @@
     "data": [
       {
         "name": "table",
-        "url": "death_merged_state_2022.csv",
+        "url": "death_merged_state_2021.csv",
         "format": {"type": "csv"},
         "transform": [
           {
